@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/clappr-chromecast-plugin@latest/dist/clappr-chromecast-plugin.min.js"></script>
+  </head>
+
+  <body>
+    <div id="player"></div>
+    <script>
+      var player = new Clappr.Player({
+        source: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+        plugins: [ChromecastPlugin],
+        parentId: '#player',
+        chromecast: {
+          appId: '9DFB77C0',
+          contentType: 'video/mp4',
+          media: {
+            type: ChromecastPlugin.Movie,
+            title: 'Awesome Hot Air Balloon Slackline',
+            subtitle: 'You won\'t get much closer to Skylining than this!'
+          },
+          customData: {
+            licenseURL: 'http://widevine/yourLicenseServer'
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

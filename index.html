@@ -1,29 +1,36 @@
-<html>
-  <head>
-    <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/clappr-chromecast-plugin@latest/dist/clappr-chromecast-plugin.min.js"></script>
-  </head>
-
-  <body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>ESPN en Vivo</title>
+    <meta charset="utf-8">
+    <script src="https://jssdk.peervadoo.com/vadoosdk.js"></script>    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/clappr/latest/clappr.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/clappr.level-selector/latest/level-selector.min.js"></script>
+</head>
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td height="20" align="center">
     <div id="player"></div>
     <script>
-      var player = new Clappr.Player({
-        source: 'http://280739561113321276.ofd0628.xyz:80/live/ja920519/UcxBnUA7DqT/321276.m3u8',
-        plugins: [ChromecastPlugin],
-        parentId: '#player',
-        chromecast: {
-          appId: '9DFB77C0',
-          contentType: 'video/mp4',
-          media: {
-            type: ChromecastPlugin.Movie,
-            title: 'Awesome Hot Air Balloon Slackline',
-            subtitle: 'You won\'t get much closer to Skylining than this!'
-          },
-          customData: {
-            licenseURL: 'http://widevine/yourLicenseServer'
-          }
-        }
-      });
+        var mixer = new vadoo.base.Mixer(token="TOKEN");
+        var player = new Clappr.Player({
+            parentId: "#player",
+            source: "http://280739561113321276.ofd0628.xyz:80/live/ja920519/UcxBnUA7DqT/321276.m3u8",
+             poster: "espn.png",
+            mute: false,
+            autoPlay: true,
+            width: 600,
+            plugins: {"core": [LevelSelector]},
+            playback: {
+                hlsjsConfig: {
+                    liveSyncDurationCount: 10,
+                    loader: mixer.createMixer()
+                }
+            }
+        });
+        vadoo.base.start_clappr_player(player);
     </script>
-  </body>
+</td></tr></table>
+</body>
 </html>

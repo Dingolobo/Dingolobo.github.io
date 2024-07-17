@@ -18,7 +18,11 @@ var art = new Artplayer({
     type: 'mkv',
 theme: '#db960b',
 fullscreen: true,
-crossOrigin: 'origin',
+moreVideoAttr: {
+// crossOrigin: 'anonymous',
+preload: 'none', // metadata
+playsInline: true,
+},
 });
 </script></div>
 

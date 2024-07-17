@@ -13,16 +13,18 @@
 <div class="artplayer-app" style="height:480;width:720"></div>
 <script>
 var art = new Artplayer({
+    const playerOptions = {
     container: '.artplayer-app',
     url: 'https://nxt.plus:8443/movie/alejandraherrera/665120/161758.mkv',
     type: 'mkv',
 theme: '#db960b',
 fullscreen: true,
 moreVideoAttr: {
-// crossOrigin: 'anonymous',
-preload: 'none', // metadata
-playsInline: true,
-},
+      // crossOrigin: 'anonymous',
+      preload: 'none', // metadata
+      playsInline: true,
+    },
+}
 });
 </script></div>
 

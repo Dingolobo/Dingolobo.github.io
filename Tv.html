@@ -1,22 +1,36 @@
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <head>
-<script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js"></script>
+    <title>ESPN en Vivo</title>
+    <meta charset="utf-8">
+    <script src="https://jssdk.peervadoo.com/vadoosdk.js"></script>    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/clappr/latest/clappr.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/clappr.level-selector/latest/level-selector.min.js"></script>
 </head>
-
 <body>
-<center>
-<div class="artplayer-app" style="height:480;width:720"></div>
-<script>
-var art = new Artplayer({
-    container: '.artplayer-app',
-    url: 'https://api.codetabs.com/v1/proxy?quest=http://k4livetv.com/series/arturo12345/arturo12345/968552.mkv',
-    type: 'mkv',
-theme: '#db960b',
-fullscreen: true,
-crossOrigin: 'anonymous',
-});
-</script>
-</center>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td height="20" align="center">
+    <div id="player"></div>
+    <script>
+        var mixer = new vadoo.base.Mixer(token="TOKEN");
+        var player = new Clappr.Player({
+            parentId: "#player",
+            source: "http://k4livetv.com:80/arturo12345/arturo12345/931778.m3u8",
+             poster: "espn.png",
+            mute: false,
+            autoPlay: true,
+            width: 600,
+            plugins: {"core": [LevelSelector]},
+            playback: {
+                hlsjsConfig: {
+                    liveSyncDurationCount: 10,
+                    loader: mixer.createMixer()
+                }
+            }
+        });
+        vadoo.base.start_clappr_player(player);
+    </script>
+</td></tr></table>
 </body>
 </html>

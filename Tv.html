@@ -1,12 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-
+<script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js"></script>
 </head>
+
 <body>
-
-<video controls><source src="https://api.codetabs.com/v1/proxy?quest=http://k4livetv.com/series/arturo12345/arturo12345/968552.mkv" type="video/mp4">
-</video>
-
+<center>
+<div class="artplayer-app" style="height:480;width:720"></div>
+<script>
+var art = new Artplayer({
+    container: '.artplayer-app',
+    url: 'https://api.codetabs.com/v1/proxy?quest=http://k4livetv.com/series/arturo12345/arturo12345/968552.mkv',
+    type: 'mkv',
+theme: '#db960b',
+fullscreen: true,
+crossOrigin: 'anonymous',
+});
+</script>
+</center>
 </body>
 </html>

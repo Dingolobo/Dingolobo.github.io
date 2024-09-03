@@ -1,31 +1,28 @@
 [
   {
-    "url": "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8",
-    "name": "prueba",
-    "type": "m3u8",
-    "language": "es"
-  },
-  {
-    "url": "https://clarovideo.vtvcable.com/HBOMAX/?url=aHR0cHM6Ly9sYXRhbXZvc2xpdmVjbGFyb3ZpZGVvLmFrYW1haXplZC5uZXQvQ29udGVudC9EQVNIX0RBU0hfRksvTGl2ZS9DaGFubmVsKEhCT19IRF9NWCkvbWFuaWZlc3QubXBk&key=MjRjMmE0ZGY4ZThkZGQxNzY2NjFjYTZlMGQ2MWIyNmI=&key2=YjFiMTM4ODlmNzFhOTY5MDJjMjg1ODIzMDIxNjNhNWM=&lang=1",
-    "name": "HBO",
+    "url": "https://xupalace.org/video/tt14153236-1x01",
+    "name": "EP1",
     "type": "iframe",
-    "language": "es"
   },
   {
-    "url": "http://biptv.tv/live/biptvstream_orig/index.m3u8",
-    "name": "BIPTV",
-    "type": "m3u8",
-    "language": "fr"
+    "url": "https://xupalace.org/video/tt14153236-1x02",
+    "name": "ep2",
+    "type": "iframe",
   },
   {
-    "url": "http://maghum-ott.com:80/live/fahim9555/280A30559862/60095.m3u8",
-    "name": "W9",
-    "type": "m3u8"
+    "url": "https://xupalace.org/video/tt14153236-1x03",
+    "name": "ep3",
+    "type": "iframe",
   },
   {
-    "url": "https://liveak.alkassdigital.net/livehttporigin/smil:YWxrYXNz1.smil/playlist.m3u8",
-    "name": "Al Kass 1",
-    "type": "m3u8"
+    "url": "https://xupalace.org/video/tt14153236-1x04",
+    "name": "ep4",
+    "type": "iframe"
+  },
+  {
+    "url": "https://xupalace.org/video/tt14153236-1x05",
+    "name": "ep5",
+    "type": "iframe"
   },
   {
     "url": "https://liveak.alkassdigital.net/livehttporigin/smil:YWxrYXNz2.smil/playlist.m3u8",

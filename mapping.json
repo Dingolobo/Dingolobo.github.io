@@ -1,5 +1,12 @@
 {
-    "manchester city": "110",
-    "champions league": "572",
-    "psg": "480"
+    "manchester city": 110,
+    "psg": 480,
+    "champions league": 572,
+    "premier league": 573,
+    "la liga": 574,
+    "serie a": 575,
+    "real madrid": 576,
+    "barcelona": 577,
+    "manchester united": 578,
+    "inter milan": 579
 }

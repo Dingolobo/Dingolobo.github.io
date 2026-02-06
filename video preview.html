@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Video Deportivo IPTV (Gracenote TMS)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #ecf0f1;
+        }
+        h1 {
+            text-align: center;
+            color: #f39c12;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .event-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .event {
+            border: 2px solid #f39c12;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(52, 73, 94, 0.8);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+            width: 300px;
+        }
+        .event h3 {
+            color: #e74c3c;
+        }
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #c0392b, #a93226);
+        }
+        canvas, video {
+            display: none; /* Ocultos, usados para generar video */
+        }
+    </style>
+</head>
+<body>
+    <h1>Generador de Video Deportivo para IPTV (Gracenote TMS)</h1>
+    <p style="text-align: center;">Haz clic en "Obtener Eventos" para cargar datos de la API, luego "Generar Video" para crear un video de 30 segundos con la agenda.</p>
+    
+    <button onclick="obtenerEventos()">Obtener Eventos Deportivos</button>
+    <div id="eventList" class="event-list"></div>
+    
+    <button onclick="generarVideo()" id="generateBtn" style="display:none;">Generar Video (30 seg)</button>
+    <canvas id="videoCanvas" width="1280" height="720"></canvas> <!-- Canvas para el video -->
+    <video id="backgroundVideo" loop muted preload="auto">
+        <source src="https://github.com/Dingolobo/Dingolobo.github.io/raw/refs/heads/main/back.mp4"> <!-- Video de prueba; reemplaza con tu video local -->
+        Tu navegador no soporta video.
+    </video>
+
+    <script>
+        let eventos = []; // Almacenar eventos obtenidos
+
+        async function obtenerEventos() {
+            const apiKey = 'hj5e3a2skerqupcuqsg9x758'; // Reemplaza con tu clave API de Gracenote TMS
+            const startDateTime = '2026-02-06T20:30Z'; // Ajusta la fecha si quieres
+            const url = `http://data.tmsapi.com/v1.1/sports/199/events/airings?lineupId=MEX-1005563-DEFAULT&startDateTime=${startDateTime}&api_key=${apiKey}`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                eventos = data; // La respuesta es un array de eventos
+                
+                mostrarEventos();
+                document.getElementById('generateBtn').style.display = 'block';
+            } catch (error) {
+                alert('Error al obtener datos: ' + error.message + '. Verifica tu clave API y la URL.');
+            }
+        }
+
+        function mostrarEventos() {
+            const list = document.getElementById('eventList');
+            list.innerHTML = '';
+            eventos.forEach(evento => {
+                const program = evento.program;
+                const station = evento.station;
+                const teams = program.teams ? program.teams.map(team => team.name).join(' vs ') : 'N/A';
+                const eventTitle = program.eventTitle || program.title;
+                const startTime = new Date(evento.startTime).toLocaleString();
+                const channel = station.callSign + ' (Canal ' + station.channel + ')';
+                
+                const eventDiv = document.createElement('div');
+                eventDiv.className = 'event';
+                eventDiv.innerHTML = `
+                    <h3>${eventTitle}</h3>
+                    <p><strong>Equipos:</strong> ${teams}</p>
+                    <p><strong>Fecha/Hora:</strong> ${startTime}</p>
+                    <p><strong>Canal:</strong> ${channel}</p>
+                    <p><strong>Descripción:</strong> ${program.shortDescription || 'N/A'}</p>
+                `;
+                list.appendChild(eventDiv);
+            });
+        }
+
+        function generarVideo() {
+            console.log('Función generarVideo() llamada'); // Log de depuración
+            if (eventos.length === 0) {
+                alert('No hay eventos para generar el video.');
+                return;
+            }
+
+            if (!MediaRecorder) {
+                alert('Tu navegador no soporta MediaRecorder. Usa Chrome o Firefox.');
+                return;
+            }
+
+            const video = document.getElementById('backgroundVideo');
+            const canvas = document.getElementById('videoCanvas');
+            const ctx = canvas.getContext('2d');
+
+            console.log('Esperando a que el video se cargue...'); // Log de depuración
+            video.addEventListener('loadeddata', () => {
+                console.log('Video cargado, iniciando grabación'); // Log de depuración
+                alert('Grabando video de 30 segundos... Por favor, espera.');
+                iniciarGrabacion();
+            });
+
+            // Timeout si no se carga
+            setTimeout(() => {
+                if (video.readyState < 2) {
+                    console.log('Timeout: Video no cargado'); // Log de depuración
+                    alert('El video de fondo no se pudo cargar. Verifica la URL o usa un video local.');
+                }
+            }, 5000);
+
+            function iniciarGrabacion() {
+                const stream = canvas.captureStream(30); // 30 FPS
+                const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+                const chunks = [];
+
+                recorder.ondataavailable = (e) => chunks.push(e.data);
+                recorder.onstop = () => {
+                    const blob = new Blob(chunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'agenda_deportiva_gracenote.webm';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    alert('Video generado y descargado. Úsalo en tu lista M3U.');
+                };
+
+                // Iniciar video de fondo
+                video.currentTime = 0; // Reiniciar
+                video.play();
+                recorder.start();
+                let frameCount = 0;
+                let groupIndex = 0;
+                const fps = 30;
+                const duration = 30; // 30 segundos
+                const totalFrames = fps * duration;
+                const framesPerGroup = Math.floor(totalFrames / Math.ceil(eventos.length / 3)); // Cambiar grupo cada ~10 seg si hay muchos eventos
+
+                function drawFrame() {
+                    // Dibujar video de fondo si está listo
+                    if (video.readyState >= 2) {
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    } else {
+                        // Fallback: fondo negro si el video no está listo
+                        ctx.fillStyle = '#000';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    }
+                    
+                    // Título superpuesto
+                    ctx.fillStyle = '#d35400'; // Naranja oscuro para legibilidad
+                    ctx.font = '48px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Agenda Deportiva IPTV', canvas.width / 2, 80);
+                    
+                    // Mostrar 3 eventos en alineación vertical
+                    const startY = 150;
+                    const spacing = 200;
+                    for (let i = 0; i < 3; i++) {
+                        const eventIdx = groupIndex * 3 + i;
+                        if (eventIdx >= eventos.length) break;
+                        
+                        const evento = eventos[eventIdx];
+                        const program = evento.program;
+                        const station = evento.station;
+                        const teams = program.teams ? program.teams.map(team => team.name).join(' vs ') : 'N/A';
+                        const eventTitle = program.eventTitle || program.title;
+                        const startTime = new Date(evento.startTime).toLocaleString();
+                        const channel = station.callSign + ' (Canal ' + station.channel + ')';
+                        
+                        const y = startY + i * spacing;
+                        
+                        // Fondo transparente para la tarjeta
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'; // Blanco semi-transparente para mejor legibilidad
+                        ctx.fillRect(100, y - 50, 1080, 150);
+                        
+                        // Línea divisoria en el bottom
+                        ctx.strokeStyle = '#000'; // Negro
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.moveTo(100, y + 100);
+                        ctx.lineTo(1180, y + 100);
+                        ctx.stroke();
+                        
+                        // Texto
+                        ctx.fillStyle = '#000'; // Negro para legibilidad
+                        ctx.font = '28px Arial';
+                        ctx.textAlign = 'left';
+                        ctx.fillText(eventTitle, 120, y);
+                        ctx.font = '20px Arial';
+                        ctx.fillText(`Equipos: ${teams}`, 120, y + 40);
+                        ctx.fillText(`Fecha: ${startTime}`, 120, y + 70);
+                        ctx.fillText(`Canal: ${channel}`, 120, y + 100);
+                    }
+                    
+                    frameCount++;
+                    if (frameCount % framesPerGroup === 0 && groupIndex < Math.ceil(eventos.length / 3) - 1) {
+                        groupIndex++;
+                    }
+                    
+                    if (frameCount < totalFrames) {
+                        requestAnimationFrame(drawFrame);
+                    } else {
+                        recorder.stop();
+                        video.pause(); // Detener video
+                    }
+                }
+                
+                drawFrame();
+            }
+        }
+    </script>
+</body>
+</html>
